@@ -7,6 +7,27 @@
     <ClInclude Include="Counters.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="LockfreeTuple.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScottMichael.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="NewFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockingFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="HerbSutterFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="newnewFIFO.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -15,9 +36,15 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{1d5d38c5-3445-4674-b01d-b7c20303eae5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="FIFO">
+      <UniqueIdentifier>{dd27ed54-d29b-48fb-9646-5219390315f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

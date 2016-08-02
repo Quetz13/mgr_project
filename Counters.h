@@ -17,7 +17,7 @@ public:
 	void increment()
 	{
 		_mutex.lock();
-		_counter = 1;
+		_counter += 1;
 		_mutex.unlock();
 	}
 
