@@ -9,7 +9,7 @@
 
 
 #define PRODUCERS 1
-#define CONSUMERS 10
+#define CONSUMERS 1
 #define ELEMENTS 10000
 
 

@@ -109,22 +109,26 @@ public:
 
 	/// 0 - brak elementow do wziecia
 	/// 1 - element wziety
-	/// -1 - element wczesniej przeczytany
 	int Consume(T& result)
 	{
 		while (true)
 		{
+			
+
 			// jeœli kolejka nie jest pusta
-			if (divider.load() != nullptr) //last.load())
+			if (divider.load() != last.load())
 			{			
+				
 				std::atomic_thread_fence(std::memory_order_acquire);
 
 				if (divider.load() == nullptr)
 				{
 					std::this_thread::yield();
 					continue;
+					//return 0;
 				}
 				assert(divider.load() != nullptr);
+				
 				Node* oldDivider = divider;
 				std::atomic<Node*> oldNextDivider = divider.load()->next.load();
 				
@@ -134,8 +138,9 @@ public:
 				
 					if (atomic_compare_exchange_strong_explicit(&divider, &oldDivider, oldNextDivider.load(), memory_order_release, memory_order_relaxed))
 					{
-						std::atomic_thread_fence(std::memory_order_release);
+						
 						result = oldDivider->value;
+						std::atomic_thread_fence(std::memory_order_release);
 						//delete oldDivider;
 						
 						return 1;

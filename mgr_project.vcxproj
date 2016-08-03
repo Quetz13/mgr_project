@@ -22,7 +22,7 @@
     <ProjectGuid>{84CAE3C8-AA39-4DC5-AB97-B0A0BBA0662D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Magisterka</RootNamespace>
-    <ProjectName>mgr_project</ProjectName>
+    <ProjectName>lockfreetests</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,6 +147,7 @@
     <ClInclude Include="Counters.h" />
     <ClInclude Include="FIFO.h" />
     <ClInclude Include="BlockingFIFO.h" />
+    <ClInclude Include="HashTable.h" />
     <ClInclude Include="HerbSutterFIFO.h" />
     <ClInclude Include="LockfreeTuple.h" />
     <ClInclude Include="NewFIFO.h" />

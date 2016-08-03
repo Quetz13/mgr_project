@@ -5,6 +5,8 @@
 #include <thread>
 #include <vector>
 
+#include "HashTable.h"
+
 ////BlockingCounter counter;
 ////LockFreeCounter counter;
 //WaitFreeCounter counter;

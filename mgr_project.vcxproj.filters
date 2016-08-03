@@ -28,6 +28,7 @@
     <ClInclude Include="newnewFIFO.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="HashTable.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

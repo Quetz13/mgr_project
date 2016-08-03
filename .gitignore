@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+x64
+Release
+Debug
+
+*.opensdf
+*.sdf
+*.sln
+*.v12.suo
+*.suo
