@@ -74,6 +74,21 @@ public:
 
 };
 
+//template<typename T>
+typedef std::uint32_t(*HashFun)(std::uint32_t);
+
+
+inline std::uint32_t uint32_t_hash(uint32_t h)
+{
+	h ^= h >> 16;
+	h *= 0x85ebca6b;
+	h ^= h >> 13;
+	h *= 0xc2b2ae35;
+	h ^= h >> 16;
+	return h;
+}
+
+template<typename T, HashFun Fun>
 class HashTable
 {
 public:
@@ -86,24 +101,15 @@ public:
 	struct Element
 	{
 		std::atomic_uint32_t key;
-		std::atomic_uint32_t value;
+		T value;
 	};
 
 	Element* nElements;
 
-	inline static uint32_t integerHash(uint32_t h)
-	{
-		h ^= h >> 16;
-		h *= 0x85ebca6b;
-		h ^= h >> 13;
-		h *= 0xc2b2ae35;
-		h ^= h >> 16;
-		return h;
-	}
 
-	void SetElement(std::uint32_t key, std::uint32_t value)
+	void SetElement(std::uint32_t key, T value)
 	{
-		for (uint32_t idx = integerHash(key);; idx++)
+		for (uint32_t idx = Fun(key);; idx++)
 		{
 			idx &= nSize - 1;
 
@@ -118,9 +124,9 @@ public:
 
 
 
-	uint32_t GetElement(std::uint32_t key)
+	T GetElement(std::uint32_t key)
 	{
-		for (uint32_t idx = integerHash(key);; idx++)
+		for (uint32_t idx = Fun(key);; idx++)
 		{
 			idx &= nSize - 1;
 

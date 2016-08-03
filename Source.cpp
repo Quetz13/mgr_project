@@ -142,7 +142,11 @@ int main()
 	//for (int i = 0; i <CONSUMERS; i++)
 	//	consumers[i].join();
 
-	mainTests();
+	//mainTests();
+
+	HashTable<std::uint32_t, uint32_t_hash> table(20);
+
+
 	cin.get();
 	return 0;
 	//testCounterSpeed(5, 1000, 1000);
