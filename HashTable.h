@@ -85,23 +85,25 @@ inline std::uint32_t uint32_t_hash(uint32_t h)
 	return h;
 }
 
-template<typename T, std::uint32_t(*HashFun)(T)>
+inline std::uint32_t string_hash(const std::string &s)
+{
+	const char *c = s.c_str();
+	const int x = (*(int *)c) & 0x00ffffff;
+	const int y = *(int *)(c + 4);
+	return 2 * x + y;
+};
+
+template<typename T, std::uint32_t(*HashFun)(T), std::uint32_t size>
 class HashTable
 {
 public:
-
-	HashTable(uint32_t size) : nSize(size)
-	{
-		//nElements = new Element[nSize];
-	}
-
 	struct Element
 	{
 		std::atomic_uint32_t key;
 		std::atomic<T> value;
 	};
 
-	Element nElements[20];
+	Element nElements[size];
 
 
 	void SetElement(std::uint32_t key, T value)
@@ -110,7 +112,7 @@ public:
 
 		for (uint32_t idx = HashFun(key);; idx++)
 		{
-			idx &= nSize - 1;
+			idx &= size - 1;
 
 			uint32_t expected = 0;					
 			uint32_t prevKey = std::atomic_compare_exchange_strong(&nElements[idx].key, &expected, key);
@@ -119,7 +121,7 @@ public:
 			
 			if ((prevKey == 0) || (prevKey == key))
 			{
-				std::atomic_store_explicit(&nElements[idx].value, value, std::memory_order::memory_order_relaxed);
+				std::atomic_store(&nElements[idx].value, value);
 				return;
 			}
 		}
@@ -131,17 +133,15 @@ public:
 	{
 		for (uint32_t idx = HashFun(key);; idx++)
 		{
-			idx &= nSize - 1;
+			idx &= size - 1;
 
-			uint32_t resultKey = std::atomic_load_explicit(&nElements[idx].key, std::memory_order::memory_order_relaxed);
+			uint32_t resultKey = std::atomic_load(&nElements[idx].key);
 			if (resultKey == key)
-				return std::atomic_load_explicit(&nElements[idx].value, std::memory_order::memory_order_relaxed);
+				return std::atomic_load(&nElements[idx].value);
 			else
 				return 0;
 		}
 	}
 
-private:
-	std::uint32_t nSize;
 };
 

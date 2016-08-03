@@ -8,12 +8,12 @@
 #include "NewFIFO.h"
 
 
-#define PRODUCERS 1
-#define CONSUMERS 1
-#define ELEMENTS 10000
+#define PRODUCERS 10
+#define CONSUMERS 10
+#define ELEMENTS 1000
 
 
-
+void print(const std::string& text);
 
 void NewFIFOQueue_produce(int num);
 void NewFIFOQueue_consume(int num);
