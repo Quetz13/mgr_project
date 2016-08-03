@@ -145,7 +145,12 @@ int main()
 	//mainTests();
 
 	HashTable<std::uint32_t, uint32_t_hash> table(20);
-
+	table.SetElement(20, 3422);
+	cout << table.GetElement(20) << endl;
+	cout << table.GetElement(21) << endl;
+	table.SetElement(20, 34422);
+	cout << table.GetElement(20) << endl;
+	cout << table.GetElement(21) << endl;
 
 	cin.get();
 	return 0;

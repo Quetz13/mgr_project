@@ -74,9 +74,6 @@ public:
 
 };
 
-//template<typename T>
-typedef std::uint32_t(*HashFun)(std::uint32_t);
-
 
 inline std::uint32_t uint32_t_hash(uint32_t h)
 {
@@ -88,32 +85,38 @@ inline std::uint32_t uint32_t_hash(uint32_t h)
 	return h;
 }
 
-template<typename T, HashFun Fun>
+template<typename T, std::uint32_t(*HashFun)(T)>
 class HashTable
 {
 public:
 
 	HashTable(uint32_t size) : nSize(size)
 	{
-		nElements = new Element[nSize];
+		//nElements = new Element[nSize];
 	}
 
 	struct Element
 	{
 		std::atomic_uint32_t key;
-		T value;
+		std::atomic<T> value;
 	};
 
-	Element* nElements;
+	Element nElements[20];
 
 
 	void SetElement(std::uint32_t key, T value)
 	{
-		for (uint32_t idx = Fun(key);; idx++)
+		
+
+		for (uint32_t idx = HashFun(key);; idx++)
 		{
 			idx &= nSize - 1;
 
-			uint32_t prevKey = std::atomic_compare_exchange_strong_explicit(&nElements[idx].key, 0, key, std::memory_order::memory_order_relaxed, std::memory_order::memory_order_relaxed);
+			uint32_t expected = 0;					
+			uint32_t prevKey = std::atomic_compare_exchange_strong(&nElements[idx].key, &expected, key);
+			
+			//uint32_t prevKey = nElements[idx].key.compare_exchange_strong(expected, key);
+			
 			if ((prevKey == 0) || (prevKey == key))
 			{
 				std::atomic_store_explicit(&nElements[idx].value, value, std::memory_order::memory_order_relaxed);
@@ -126,7 +129,7 @@ public:
 
 	T GetElement(std::uint32_t key)
 	{
-		for (uint32_t idx = Fun(key);; idx++)
+		for (uint32_t idx = HashFun(key);; idx++)
 		{
 			idx &= nSize - 1;
 
