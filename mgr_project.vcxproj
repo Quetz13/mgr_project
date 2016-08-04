@@ -149,6 +149,7 @@
     <ClInclude Include="BlockingFIFO.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="HerbSutterFIFO.h" />
+    <ClInclude Include="LockfreeHashMap.h" />
     <ClInclude Include="LockfreeTuple.h" />
     <ClInclude Include="NewFIFO.h" />
     <ClInclude Include="newnewFIFO.h" />

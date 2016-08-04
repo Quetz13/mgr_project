@@ -2,20 +2,21 @@
 
 #include <atomic>
 #include <cstdint>
+#include <cmath>
 
 template<typename T>
 class BucketsList
 {
 private:
-	struct Bucket
+	struct Element
 	{
-		Bucket(T value, std::uint32_t index) : value(value), index(index), next(nullptr) {}
-		T value;
-		std::atomic<Bucket*> next;
-		std::uint32_t index;
+		Element(T* value, std::uint32_t index) : value(value), index(index), next(nullptr) {}
+		T* value;
+		std::atomic<Element*> next;
+		const std::uint32_t index;
 	};
 
-	std::atomic<Bucket*> head;
+	std::atomic<Element*> head;
 
 public:
 
@@ -28,41 +29,89 @@ public:
 	// not thread safe
 	~BucketsList()
 	{
-		while (head != nullptr)
+		while (head.load() != nullptr)
 		{
-			Bucket* tmp = head.load();
-			head = tmp->next;
-			delete tmp;
+			Element* tmp = head.load();
+			head.store(tmp->next);
+			delete tmp->value;
+			delete tmp;	
 		}
 	}
 
 	// thread safe & lockfree
-	void TryToAddBucket(T value, std::uint32_t index)
+	// TODO kwestia indeksu, zeby w pêtli dodawaæ
+	void TryToAdd(T* value, const std::uint32_t index)
 	{
+		Element* newBucket = nullptr;
 		do
 		{
+			if (newBucket)
+				delete newBucket;
 			// pobranie obencje g³owy
-			Bucket* tempHead = head;
-			// sprawdzenie czy nie ma ju¿ Bucketu o takim indeksie
-			if (index <= tempHead->index)
-				return;
-			
-			Bucket* newBucket = new Bucket(value, index);
-			newBucket->next = head.load();
+			Element* tempHead = head;
+			std::uint32_t newIndex = 0;
+			if (tempHead != nullptr)
+			{
+				newIndex = tempHead->index + 1;
+				// sprawdzenie czy nie ma ju¿ Bucketa o takim indeksie
+				if (index <= tempHead->index)
+					return;
+			}
+
+			newBucket = new Element(value, newIndex);
+			newBucket->next = tempHead;
 
 		} while (std::atomic_compare_exchange_strong(head, tempHead, newBucket));
 	}
 
-	Bucket* GetBucket(std::uint32_t index)
+	// thread safe & lockfree
+	T* Get(std::uint32_t index) const
 	{
-		Bucket* bucket = head;
+		Element* bucket = head;
 		if (index > bucket->index)
 			return nullptr;
 
 		while (bucket != nullptr && bucket->index != index)
 			bucket = bucket->next;
 
-		return bucket;
+		return bucket->value;
 	}
+
+};
+
+
+template<typename T, std::uint32_t BucketSize>
+class LockFreeHashTable
+{
+private:
+	struct Bucket
+	{
+		std::atomic_uint32_t key;
+		std::atomic<T*> value;
+	};
+
+	BucketsList<Bucket> _buckets;
+
+	std::uint32_t getBucketIndex(std::uint32_t key)
+	{
+		return std::ceil(key / BucketSize) - 1;
+	}
+
+public:
+	void Insert(std::uint32_t key, T* value)
+	{
+		auto bucketIndex = getBucketIndex(key);
+		_buckets.TryToAdd(new Bucket[BucketSize], bucketIndex);
+
+		Bucket* bucket = _buckets.Get(bucketIndex);
+
+	}
+
+	T Get(const std::uint32_t key) const
+	{
+		std::uint32_t bucketIndex = getBucketIndex(key);
+		return *(_buckets.Get(bucketIndex)[key - bucketIndex*BucketSize].value.load());
+	}
+
 
 };

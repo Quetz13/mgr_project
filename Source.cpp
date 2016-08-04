@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "HashTable.h"
-
+#include "LockfreeHashMap.h"
 
 
 HashTable<std::uint32_t, uint32_t_hash, ELEMENTS> uint32_table;
@@ -115,7 +115,10 @@ void testHASH(int producers, int consumers, void produce(int), void consume(int)
 int main()
 {
 	//mainTests();
-	testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
+	//testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
+
+	LockFreeHashTable<int, 1024> ht;
+	ht.Get(0);
 
 	cin.get();
 	return 0;
