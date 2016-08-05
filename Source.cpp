@@ -118,7 +118,14 @@ int main()
 	//testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
 
 	LockFreeHashTable<int, 1024> ht;
-	ht.Get(0);
+	int* value = new int(13);
+	ht.Set(10, value);
+	auto result = ht.Get(10);
+
+	if (result == nullptr)
+		cout << "NULL" << endl;
+	else
+		cout << *result << endl;
 
 	cin.get();
 	return 0;

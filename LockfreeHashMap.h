@@ -33,44 +33,61 @@ public:
 		{
 			Element* tmp = head.load();
 			head.store(tmp->next);
-			delete tmp->value;
+			delete [] tmp->value;
 			delete tmp;	
 		}
 	}
 
-	// thread safe & lockfree
-	// TODO kwestia indeksu, zeby w pêtli dodawaæ
-	void TryToAdd(T* value, const std::uint32_t index)
+	unsigned int size() const
 	{
-		Element* newBucket = nullptr;
+		if (head.load() != nullptr)
+			return head.load()->index + 1;
+		else
+			return 0;
+	}
+
+	// thread safe & lockfree
+	bool TryToAdd(T* value, const std::uint32_t index)
+	{
+		std::uint32_t currentIndex = 0;
 		do
 		{
-			if (newBucket)
-				delete newBucket;
-			// pobranie obencje g³owy
-			Element* tempHead = head;
-			std::uint32_t newIndex = 0;
-			if (tempHead != nullptr)
+			Element* newBucket = nullptr;
+			Element* tempHead = nullptr;
+			do
 			{
-				newIndex = tempHead->index + 1;
-				// sprawdzenie czy nie ma ju¿ Bucketa o takim indeksie
-				if (index <= tempHead->index)
-					return;
-			}
+				if (newBucket)
+					delete newBucket;
+				// pobranie obecnej g³owy
+				tempHead = head;
+				if (tempHead != nullptr)
+				{
+					currentIndex = tempHead->index + 1;
+					// sprawdzenie czy nie ma ju¿ Bucketa o takim indeksie
+					if (index <= tempHead->index)
+						return false;
+				}
 
-			newBucket = new Element(value, newIndex);
-			newBucket->next = tempHead;
+				newBucket = new Element(value, currentIndex);
+				newBucket->next = tempHead;
 
-		} while (std::atomic_compare_exchange_strong(head, tempHead, newBucket));
+			//} while (!std::atomic_compare_exchange_strong(&head, tempHead, newBucket));
+			} while (!head.compare_exchange_strong(tempHead, newBucket));
+		} while (currentIndex != index);
+
+		return true;
 	}
 
 	// thread safe & lockfree
 	T* Get(std::uint32_t index) const
 	{
 		Element* bucket = head;
-		if (index > bucket->index)
+		// sprawdzenie czy szukany bucket istnieje
+		if (bucket == nullptr || index > bucket->index)
 			return nullptr;
 
+		// znalezienie odpowiedniego bucketa
+		// TODO mo¿na zoptymalizowaæ zapewne, zmniejszyæ iloœæ sprawdzeñ
 		while (bucket != nullptr && bucket->index != index)
 			bucket = bucket->next;
 
@@ -92,26 +109,41 @@ private:
 
 	BucketsList<Bucket> _buckets;
 
-	std::uint32_t getBucketIndex(std::uint32_t key)
+	std::uint32_t getBucketIndex(std::uint32_t key) const
 	{
-		return std::ceil(key / BucketSize) - 1;
+		return (std::uint32_t)std::ceil(key / BucketSize);
+	}
+
+	std::uint32_t getKeyLocalIndex(std::uint32_t key) const
+	{
+		return key % BucketSize;
 	}
 
 public:
-	void Insert(std::uint32_t key, T* value)
+	void Set(std::uint32_t key, T* value)
 	{
 		auto bucketIndex = getBucketIndex(key);
-		_buckets.TryToAdd(new Bucket[BucketSize], bucketIndex);
 
+		// dodanie bucketów jeœli trzeba
+		if (bucketIndex >= _buckets.size())
+		{
+			auto newBucket = new Bucket[BucketSize];
+			if (!_buckets.TryToAdd(newBucket, bucketIndex))
+				delete newBucket;
+		}
 		Bucket* bucket = _buckets.Get(bucketIndex);
 
+		bucket[getKeyLocalIndex(key)].value.store(value);
 	}
 
-	T Get(const std::uint32_t key) const
+	const T* Get(std::uint32_t key) const
 	{
 		std::uint32_t bucketIndex = getBucketIndex(key);
-		return *(_buckets.Get(bucketIndex)[key - bucketIndex*BucketSize].value.load());
+		auto bucket = _buckets.Get(bucketIndex);
+		if (bucket != nullptr)
+			return _buckets.Get(bucketIndex)[key - bucketIndex*BucketSize].value.load();
+		else 
+			return nullptr;
 	}
-
 
 };
