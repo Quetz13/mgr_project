@@ -13,7 +13,7 @@ std::uint32_t hashFun(std::uint32_t value)
 	return value;
 }
 
-LockFreeHashTable<std::uint32_t, ELEMENTS, hashFun> uint32_table;
+LockFreeHashTable<std::uint32_t, std::uint32_t, ELEMENTS, hashFun> uint32_table;
 
 void HashSet(int num)
 {

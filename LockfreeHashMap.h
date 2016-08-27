@@ -102,13 +102,13 @@ public:
 
 //std::uint32_t(*Hash)(std::uint32_t);
 
-template<typename T, std::uint32_t BucketSize, std::uint32_t(*HashFunction)(T)>
+template<typename KeyType, typename DataType, std::uint32_t BucketSize, std::uint32_t(*HashFunction)(KeyType)>
 class LockFreeHashTable
 {
 private:
 	struct Bucket
 	{
-		std::atomic<T*> value;
+		std::atomic<DataType*> value;
 	};
 
 	BucketsList<Bucket, BucketSize> _buckets;
@@ -124,7 +124,7 @@ private:
 	}
 
 public:
-	void Set(std::uint32_t key, T* value)
+	void Set(KeyType key, DataType* value)
 	{
 		auto hashKey = HashFunction(key);
 		auto bucketIndex = getBucketIndex(hashKey);
@@ -139,11 +139,11 @@ public:
 		}
 		Bucket* bucket = _buckets.Get(bucketIndex);
 
-		T* prev = bucket[getKeyLocalIndex(hashKey)].value.exchange(value);
+		DataType* prev = bucket[getKeyLocalIndex(hashKey)].value.exchange(value);
 		delete prev;
 	}
 
-	const T* Get(std::uint32_t key) const
+	const DataType* Get(KeyType key) const
 	{
 		std::uint32_t bucketIndex = getBucketIndex(key);
 		auto bucket = _buckets.Get(bucketIndex);
