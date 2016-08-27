@@ -105,20 +105,13 @@ public:
 
 	Element nElements[size];
 
-
 	void SetElement(std::uint32_t key, T value)
 	{
-		
-
 		for (uint32_t idx = HashFun(key);; idx++)
 		{
 			idx &= size - 1;
-
 			uint32_t expected = 0;					
-			uint32_t prevKey = std::atomic_compare_exchange_strong(&nElements[idx].key, &expected, key);
-			
-			//uint32_t prevKey = nElements[idx].key.compare_exchange_strong(expected, key);
-			
+			uint32_t prevKey = std::atomic_compare_exchange_strong(&nElements[idx].key, &expected, key);			
 			if ((prevKey == 0) || (prevKey == key))
 			{
 				std::atomic_store(&nElements[idx].value, value);
@@ -126,8 +119,6 @@ public:
 			}
 		}
 	}
-
-
 
 	T GetElement(std::uint32_t key)
 	{
@@ -142,6 +133,5 @@ public:
 				return 0;
 		}
 	}
-
 };
 

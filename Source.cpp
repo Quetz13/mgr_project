@@ -5,11 +5,15 @@
 #include <thread>
 #include <vector>
 
-#include "HashTable.h"
+//#include "HashTable.h"
 #include "LockfreeHashMap.h"
 
+std::uint32_t hashFun(std::uint32_t value)
+{
+	return value;
+}
 
-HashTable<std::uint32_t, uint32_t_hash, ELEMENTS> uint32_table;
+LockFreeHashTable<std::uint32_t, ELEMENTS, hashFun> uint32_table;
 
 void HashSet(int num)
 {
@@ -17,7 +21,7 @@ void HashSet(int num)
 	int index = 1;
 	for (uint32_t i = 1; i <= 5 * ELEMENTS; i++)
 	{
-		uint32_table.SetElement(index++, i);
+		uint32_table.Set(i, new std::uint32_t(i));
 		
 		if (index == ELEMENTS + 1)
 			index = 1;
@@ -25,7 +29,7 @@ void HashSet(int num)
 		c++;
 	}
 
-	print("Producent " + to_string(num) + ": " + to_string(c));
+//	print("Producent " + to_string(num) + ": " + to_string(c));
 }
 
 void HashGet(int num)
@@ -34,7 +38,7 @@ void HashGet(int num)
 	int index = 1;
 	for (uint32_t i = 1; i <= 10 * ELEMENTS; i++)
 	{
-		auto x = uint32_table.GetElement(index++);
+		auto x = uint32_table.Get(index++);
 
 		if (index == ELEMENTS + 1)
 			index = 1;
@@ -42,7 +46,7 @@ void HashGet(int num)
 		c++;
 	}
 
-	print("Consument " + to_string(num) + ": " + to_string(c));
+//	print("Consument " + to_string(num) + ": " + to_string(c));
 }
 
 //void HashSetStr(int num)
@@ -115,17 +119,17 @@ void testHASH(int producers, int consumers, void produce(int), void consume(int)
 int main()
 {
 	//mainTests();
-	//testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
+	testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
 
-	LockFreeHashTable<int, 1024> ht;
-	int* value = new int(13);
-	ht.Set(10, value);
-	auto result = ht.Get(10);
+	//LockFreeHashTable<int, 1024> ht;
+	//int* value = new int(13);
+	//ht.Set(10, value);
+	//auto result = ht.Get(10);
 
-	if (result == nullptr)
-		cout << "NULL" << endl;
-	else
-		cout << *result << endl;
+	//if (result == nullptr)
+	//	cout << "NULL" << endl;
+	//else
+	//	cout << *result << endl;
 
 	cin.get();
 	return 0;

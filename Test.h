@@ -8,8 +8,8 @@
 #include "NewFIFO.h"
 
 
-#define PRODUCERS 10
-#define CONSUMERS 10
+#define PRODUCERS 100
+#define CONSUMERS 100
 #define ELEMENTS 1000
 
 

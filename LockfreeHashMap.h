@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <cmath>
 
-template<typename T>
+template<typename T, std::uint32_t ElementSize>
 class BucketsList
 {
 private:
@@ -38,7 +38,7 @@ public:
 		}
 	}
 
-	unsigned int size() const
+	unsigned int lastIndex() const
 	{
 		if (head.load() != nullptr)
 			return head.load()->index + 1;
@@ -47,7 +47,7 @@ public:
 	}
 
 	// thread safe & lockfree
-	bool TryToAdd(T* value, const std::uint32_t index)
+	bool TryToAdd(const std::uint32_t index)
 	{
 		std::uint32_t currentIndex = 0;
 		do
@@ -57,7 +57,11 @@ public:
 			do
 			{
 				if (newBucket)
+				{
+					delete [] newBucket->value;
 					delete newBucket;
+				}
+
 				// pobranie obecnej g³owy
 				tempHead = head;
 				if (tempHead != nullptr)
@@ -68,12 +72,12 @@ public:
 						return false;
 				}
 
-				newBucket = new Element(value, currentIndex);
+				newBucket = new Element(new T[ElementSize], currentIndex);
 				newBucket->next = tempHead;
 
 			//} while (!std::atomic_compare_exchange_strong(&head, tempHead, newBucket));
 			} while (!head.compare_exchange_strong(tempHead, newBucket));
-		} while (currentIndex != index);
+		} while (currentIndex < index);
 
 		return true;
 	}
@@ -96,18 +100,18 @@ public:
 
 };
 
+//std::uint32_t(*Hash)(std::uint32_t);
 
-template<typename T, std::uint32_t BucketSize>
+template<typename T, std::uint32_t BucketSize, std::uint32_t(*HashFunction)(T)>
 class LockFreeHashTable
 {
 private:
 	struct Bucket
 	{
-		std::atomic_uint32_t key;
 		std::atomic<T*> value;
 	};
 
-	BucketsList<Bucket> _buckets;
+	BucketsList<Bucket, BucketSize> _buckets;
 
 	std::uint32_t getBucketIndex(std::uint32_t key) const
 	{
@@ -122,18 +126,21 @@ private:
 public:
 	void Set(std::uint32_t key, T* value)
 	{
-		auto bucketIndex = getBucketIndex(key);
+		auto hashKey = HashFunction(key);
+		auto bucketIndex = getBucketIndex(hashKey);
 
 		// dodanie bucketów jeœli trzeba
-		if (bucketIndex >= _buckets.size())
+		if (bucketIndex >= _buckets.lastIndex())
 		{
-			auto newBucket = new Bucket[BucketSize];
-			if (!_buckets.TryToAdd(newBucket, bucketIndex))
-				delete newBucket;
+			//auto newBucket = new Bucket[BucketSize];
+			//if (!_buckets.TryToAdd(newBucket, bucketIndex))
+				//delete newBucket;
+			_buckets.TryToAdd(bucketIndex);
 		}
 		Bucket* bucket = _buckets.Get(bucketIndex);
 
-		bucket[getKeyLocalIndex(key)].value.store(value);
+		T* prev = bucket[getKeyLocalIndex(hashKey)].value.exchange(value);
+		delete prev;
 	}
 
 	const T* Get(std::uint32_t key) const
