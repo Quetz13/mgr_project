@@ -11,8 +11,9 @@ public:
 
 	void Insert(KeyType key, DataType data)
 	{
-		std::unique_lock<std::mutex>(_mutex);
+		_mutex.lock();
 		this->insert(std::make_pair(key, data));
+		_mutex.unlock();
 	}
 
 	DataType Get(const KeyType &key)

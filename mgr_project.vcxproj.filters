@@ -41,6 +41,9 @@
     <ClInclude Include="LockFreeArray.h">
       <Filter>HashMap</Filter>
     </ClInclude>
+    <ClInclude Include="TestHashMap.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

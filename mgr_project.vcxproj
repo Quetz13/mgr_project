@@ -161,6 +161,7 @@
     <ClInclude Include="newnewFIFO.h" />
     <ClInclude Include="ScottMichael.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="TestHashMap.h" />
     <ClInclude Include="UnorderedMap.h" />
   </ItemGroup>
   <ItemGroup>

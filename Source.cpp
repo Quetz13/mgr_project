@@ -9,7 +9,7 @@
 //#include "HashTable.h"
 #include "LockfreeHashMap.h"
 
-#include "HashMapTests.h"
+#include "TestHashMap.h"
 
 std::uint32_t hashFun(std::uint32_t value)
 {
@@ -122,12 +122,8 @@ void testHASH(int producers, int consumers, void produce(int), void consume(int)
 int main()
 {
 
-
-
-
-
-
-
+	
+	testHM::testInsert(10, 100000);
 
 
 
