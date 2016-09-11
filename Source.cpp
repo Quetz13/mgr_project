@@ -123,9 +123,9 @@ int main()
 {
 
 	
-	testHM::testInsert(1000, 10000);
-	testHM::testGet(1000, 10000);
-
+	//testHM::testInsert(1000, 10000);
+	//testHM::testGet(1000, 10000);
+	testHM::testAll(50, 100, 100000);;
 
 
 

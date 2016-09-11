@@ -12,7 +12,7 @@ namespace testHM
 		return value;
 	}
 
-	typedef void (*SetFunction)(unsigned int);
+	typedef void (*Function)(unsigned int);
 
 	std::atomic_bool _startFlag;
 	
@@ -162,7 +162,7 @@ namespace testHM
 #pragma region TEST_FUNCTIONS
 
 
-	double TestThreads(SetFunction function, unsigned int threads, unsigned int elements)
+	double TestThreads(Function function, unsigned int threads, unsigned int elements)
 	{
 		using namespace std::chrono;
 		std::vector<std::thread*> threadsVec;
@@ -171,6 +171,32 @@ namespace testHM
 
 		for (auto i = 0u; i < threads; i++)
 			threadsVec.push_back(new std::thread(function, elements));
+
+		start = high_resolution_clock::now();
+		_startFlag = true;
+
+		for (auto t : threadsVec)
+			t->join();
+		stop = high_resolution_clock::now();
+
+		for (auto t : threadsVec)
+			delete t;
+		_startFlag = false;
+
+		return duration<double>(stop - start).count();
+	}
+
+	double TestThreads(Function function1, unsigned int threads1, Function function2, unsigned int threads2, unsigned int elements)
+	{
+		using namespace std::chrono;
+		std::vector<std::thread*> threadsVec;
+		time_point<high_resolution_clock> start;
+		time_point<high_resolution_clock> stop;
+
+		for (auto i = 0u; i < threads1; i++)
+			threadsVec.push_back(new std::thread(function1, elements));
+		for (auto i = 0u; i < threads2; i++)
+			threadsVec.push_back(new std::thread(function2, elements));
 
 		start = high_resolution_clock::now();
 		_startFlag = true;
@@ -243,6 +269,40 @@ namespace testHM
 
 		// LOCKFREE10000
 		auto freetime10000 = TestThreads(lockFreeTable10000_GetThread, threads, elements);
+
+		std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
+		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
+		std::cout << "Time LOCKFREE1:\t\t" << freetime1 << std::endl;
+		std::cout << "Time LOCKFREE10:\t" << freetime10 << std::endl;
+		std::cout << "Time LOCKFREE100:\t" << freetime100 << std::endl;
+		std::cout << "Time LOCKFREE1000:\t" << freetime1000 << std::endl;
+		std::cout << "Time LOCKFREE10000:\t" << freetime10000 << std::endl;
+	}
+
+	void testAll(unsigned int threadsSet, unsigned int threadsRead, unsigned int elements)
+	{
+		// TBB
+		auto tbbTime = TestThreads(tbbHashMap_SetThread, threadsSet, tbbHashMap_GetThread, threadsRead, elements);
+
+		// UNORDERED
+		auto stdTime = TestThreads(stdMap_SetThread, threadsSet, stdMap_GetThread, threadsRead, elements);
+
+		// LOCKFREE1
+		auto freetime1 = TestThreads(lockFreeTable1_SetThread, threadsSet, lockFreeTable1_GetThread, threadsRead, elements);
+
+		// LOCKFREE10
+		auto freetime10 = TestThreads(lockFreeTable10_SetThread, threadsSet, lockFreeTable10_GetThread, threadsRead, elements);
+
+		// LOCKFREE100
+		auto freetime100 = TestThreads(lockFreeTable100_SetThread, threadsSet, lockFreeTable100_GetThread, threadsRead, elements);
+
+		// LOCKFREE1000
+		auto freetime1000 = TestThreads(lockFreeTable1000_SetThread, threadsSet, lockFreeTable1000_GetThread, threadsRead, elements);
+
+		// LOCKFREE10000
+		auto freetime10000 = TestThreads(lockFreeTable10000_SetThread, threadsSet, lockFreeTable10000_GetThread, threadsRead, elements);
+
+
 
 		std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
 		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
