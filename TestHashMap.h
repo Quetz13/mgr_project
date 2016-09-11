@@ -1,7 +1,7 @@
 #pragma once
+#define JUNCTION
 #include <thread>
 #include <vector>
-#include <assert.h>
 #include "tbb\concurrent_hash_map.h"
 #ifdef JUNCTION
 #include "ConcurrentMap_Linear.h"
