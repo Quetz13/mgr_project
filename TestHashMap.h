@@ -1,5 +1,5 @@
 #pragma once
-#define JUNCTION
+//#define JUNCTION
 #include <thread>
 #include <vector>
 #include "tbb\concurrent_hash_map.h"
@@ -323,8 +323,8 @@ namespace testHM
 		//auto linearTime = TestThreads(junctionLinear_SetThread, threads, elements);
 		//std::cout << "Time JunctionLinear:\t\t" << linearTime << std::endl;
 		// junctionGrampa
-		auto grampaTime = TestThreads(junctionGrampa_SetThread, threads, elements);
-		std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
+		//auto grampaTime = TestThreads(junctionGrampa_SetThread, threads, elements);
+		//std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
 		// junctionCrude
 		auto crudeTime = TestThreads(junctionCrude_SetThread, threads, elements);
 		std::cout << "Time JunctionCrude:\t" << crudeTime << std::endl;
@@ -360,17 +360,17 @@ namespace testHM
 		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
 #ifdef JUNCTION
 		// junctionLinear
-		auto linearTime = TestThreads(junctionLinear_GetThread, threads, elements);
-		std::cout << "Time JunctionLinear:\t" << linearTime << std::endl;
+		//auto linearTime = TestThreads(junctionLinear_GetThread, threads, elements);
+		//std::cout << "Time JunctionLinear:\t" << linearTime << std::endl;
 		// junctionGrampa
-		auto grampaTime = TestThreads(junctionGrampa_GetThread, threads, elements);
-		std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
+		//auto grampaTime = TestThreads(junctionGrampa_GetThread, threads, elements);
+		//std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
 		// junctionCrude
 		auto crudeTime = TestThreads(junctionCrude_GetThread, threads, elements);
 		std::cout << "Time JunctionCrude:\t" << crudeTime << std::endl;
 		// junctionLeapFrog
-		auto leapFrogTime = TestThreads(junctionLeapFrog_GetThread, threads, elements);
-		std::cout << "Time JunctionLeapFrog:\t" << leapFrogTime << std::endl;
+		//auto leapFrogTime = TestThreads(junctionLeapFrog_GetThread, threads, elements);
+		//std::cout << "Time JunctionLeapFrog:\t" << leapFrogTime << std::endl;
 #endif
 		// LOCKFREE1
 		auto freetime1 = TestThreads(lockFreeTable1_GetThread, threads, elements);
@@ -393,52 +393,39 @@ namespace testHM
 	void testAll(unsigned int threadsSet, unsigned int threadsRead, unsigned int elements)
 	{
 		// TBB
-		auto tbbTime = TestThreads(tbbHashMap_SetThread, threadsSet, tbbHashMap_GetThread, threadsRead, elements);
-
+		//auto tbbTime = TestThreads(tbbHashMap_SetThread, threadsSet, tbbHashMap_GetThread, threadsRead, elements);
+		//std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
 		// UNORDERED
-		auto stdTime = TestThreads(stdMap_SetThread, threadsSet, stdMap_GetThread, threadsRead, elements);
+		//auto stdTime = TestThreads(stdMap_SetThread, threadsSet, stdMap_GetThread, threadsRead, elements);
+		//std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
 #ifdef JUNCTION
 		// LINEAR
-		auto linearTime = TestThreads(junctionLinear_SetThread, threadsSet, junctionLinear_GetThread, threadsRead, elements);
-
+		//auto linearTime = TestThreads(junctionLinear_SetThread, threadsSet, junctionLinear_GetThread, threadsRead, elements);
+		//std::cout << "Time JunctionLinear:\t" << linearTime << std::endl;
 		// Crude
 		auto crudeTime = TestThreads(junctionCrude_SetThread, threadsSet, junctionCrude_GetThread, threadsRead, elements);
-
+		std::cout << "Time JunctionCrude:\t" << crudeTime << std::endl;
 		// Grampa
-		auto grampaTime = TestThreads(junctionGrampa_SetThread, threadsSet, junctionGrampa_GetThread, threadsRead, elements);
-
+		//auto grampaTime = TestThreads(junctionGrampa_SetThread, threadsSet, junctionGrampa_GetThread, threadsRead, elements);
+		//std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
 		// LeapFrog
-		auto leapFrogTime = TestThreads(junctionLeapFrog_SetThread, threadsSet, junctionLeapFrog_GetThread, threadsRead, elements);
+		//auto leapFrogTime = TestThreads(junctionLeapFrog_SetThread, threadsSet, junctionLeapFrog_GetThread, threadsRead, elements);
+		//std::cout << "Time JunctionLeapFrog:\t" << leapFrogTime << std::endl;
 #endif
 		// LOCKFREE1
 		auto freetime1 = TestThreads(lockFreeTable1_SetThread, threadsSet, lockFreeTable1_GetThread, threadsRead, elements);
-
+		std::cout << "Time LOCKFREE1:\t\t" << freetime1 << std::endl;
 		// LOCKFREE10
 		auto freetime10 = TestThreads(lockFreeTable10_SetThread, threadsSet, lockFreeTable10_GetThread, threadsRead, elements);
-
+		std::cout << "Time LOCKFREE10:\t" << freetime10 << std::endl;
 		// LOCKFREE100
 		auto freetime100 = TestThreads(lockFreeTable100_SetThread, threadsSet, lockFreeTable100_GetThread, threadsRead, elements);
-
+		std::cout << "Time LOCKFREE100:\t" << freetime100 << std::endl;
 		// LOCKFREE1000
 		auto freetime1000 = TestThreads(lockFreeTable1000_SetThread, threadsSet, lockFreeTable1000_GetThread, threadsRead, elements);
-
+		std::cout << "Time LOCKFREE1000:\t" << freetime1000 << std::endl;
 		// LOCKFREE10000
 		auto freetime10000 = TestThreads(lockFreeTable10000_SetThread, threadsSet, lockFreeTable10000_GetThread, threadsRead, elements);
-
-
-
-		std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
-		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
-#ifdef JUNCTION
-		std::cout << "Time JunctionLinear:\t" << linearTime << std::endl;
-		std::cout << "Time JunctionCrude:\t" << crudeTime << std::endl;
-		std::cout << "Time JunctionGrampa:\t" << grampaTime << std::endl;
-		std::cout << "Time JunctionLeapFrog:\t" << leapFrogTime << std::endl;
-#endif
-		std::cout << "Time LOCKFREE1:\t\t" << freetime1 << std::endl;
-		std::cout << "Time LOCKFREE10:\t" << freetime10 << std::endl;
-		std::cout << "Time LOCKFREE100:\t" << freetime100 << std::endl;
-		std::cout << "Time LOCKFREE1000:\t" << freetime1000 << std::endl;
 		std::cout << "Time LOCKFREE10000:\t" << freetime10000 << std::endl;
 		std::cout << std::endl;
 	}
