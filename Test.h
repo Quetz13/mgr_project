@@ -10,7 +10,7 @@
 
 #define PRODUCERS 100
 #define CONSUMERS 100
-#define ELEMENTS 1000
+#define ELEMENTS 100000
 
 
 void print(const std::string& text);

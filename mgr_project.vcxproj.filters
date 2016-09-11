@@ -28,9 +28,18 @@
     <ClInclude Include="newnewFIFO.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="HashTable.h" />
     <ClInclude Include="LockfreeHashMap.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryOrder.h" />
+    <ClInclude Include="UnorderedMap.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HashMapTests.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeArray.h">
+      <Filter>HashMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +51,9 @@
     </Filter>
     <Filter Include="FIFO">
       <UniqueIdentifier>{dd27ed54-d29b-48fb-9646-5219390315f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HashMap">
+      <UniqueIdentifier>{8ca70d30-9fa7-453d-9018-39633396fbfc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

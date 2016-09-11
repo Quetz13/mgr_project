@@ -4,9 +4,12 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include "MemoryOrder.h"
 
 //#include "HashTable.h"
 #include "LockfreeHashMap.h"
+
+#include "HashMapTests.h"
 
 std::uint32_t hashFun(std::uint32_t value)
 {
@@ -118,8 +121,55 @@ void testHASH(int producers, int consumers, void produce(int), void consume(int)
 
 int main()
 {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//mainTests();
-	testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
+
+
+	//testHASH(PRODUCERS, CONSUMERS, HashSet, HashGet);
+
+
+	//hmtest::samples<std::uint32_t, std::uint32_t> sample(2,10000,0);
+	//a = false;
+	//b = false;
+	//c = 0;
+	//std::thread t1(aWrite_bWrite);
+	//std::thread t2(bRead_aRead);
+	////std::thread t3(aRead_bRead);
+	////std::thread t4(bRead_aRead);
+	//t1.join();
+	//t2.join();
+	////t3.join();
+	////t4.join();
+	//cout << c <<endl;
+	//assert(c.load() != 0);
+
+	//std::thread t1(create);
+	//std::thread t2(use);
+	//t1.join();
+	//t2.join();
 
 	//LockFreeHashTable<int, 1024> ht;
 	//int* value = new int(13);

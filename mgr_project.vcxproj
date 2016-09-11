@@ -101,10 +101,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>G:\Projekty\LIB\C++\tbb44_20160526oss\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>G:\Projekty\LIB\C++\tbb44_20160526oss\lib\intel64\vc12;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -135,26 +137,31 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>G:\Projekty\LIB\C++\tbb44_20160526oss\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>G:\Projekty\LIB\C++\tbb44_20160526oss\lib\intel64\vc12;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Counters.h" />
     <ClInclude Include="FIFO.h" />
     <ClInclude Include="BlockingFIFO.h" />
-    <ClInclude Include="HashTable.h" />
+    <ClInclude Include="HashMapTests.h" />
+    <ClInclude Include="LockFreeArray.h" />
     <ClInclude Include="HerbSutterFIFO.h" />
     <ClInclude Include="LockfreeHashMap.h" />
     <ClInclude Include="LockfreeTuple.h" />
+    <ClInclude Include="MemoryOrder.h" />
     <ClInclude Include="NewFIFO.h" />
     <ClInclude Include="newnewFIFO.h" />
     <ClInclude Include="ScottMichael.h" />
     <ClInclude Include="Test.h" />
+    <ClInclude Include="UnorderedMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp" />

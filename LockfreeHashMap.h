@@ -75,7 +75,6 @@ public:
 				newBucket = new Element(new T[ElementSize], currentIndex);
 				newBucket->next = tempHead;
 
-			//} while (!std::atomic_compare_exchange_strong(&head, tempHead, newBucket));
 			} while (!head.compare_exchange_strong(tempHead, newBucket));
 		} while (currentIndex < index);
 
@@ -89,11 +88,18 @@ public:
 		// sprawdzenie czy szukany bucket istnieje
 		if (bucket == nullptr || index > bucket->index)
 			return nullptr;
-
+		
 		// znalezienie odpowiedniego bucketa
 		// TODO mo¿na zoptymalizowaæ zapewne, zmniejszyæ iloœæ sprawdzeñ
-		while (bucket != nullptr && bucket->index != index)
+		auto count = bucket->index - index;
+		while (count--)
+		{
 			bucket = bucket->next;
+		}
+			
+
+		//while (bucket != nullptr && bucket->index != index)
+		//	bucket = bucket->next;
 
 		return bucket->value;
 	}
