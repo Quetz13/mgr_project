@@ -123,8 +123,8 @@ int main()
 {
 
 	
-	testHM::testInsert(10, 100000);
-
+	testHM::testInsert(1000, 10000);
+	testHM::testGet(1000, 10000);
 
 
 

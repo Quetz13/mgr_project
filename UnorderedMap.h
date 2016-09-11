@@ -11,14 +11,13 @@ public:
 
 	void Insert(KeyType key, DataType data)
 	{
-		_mutex.lock();
+		std::lock_guard<std::mutex> lock(_mutex);
 		this->insert(std::make_pair(key, data));
-		_mutex.unlock();
 	}
 
 	DataType Get(const KeyType &key)
 	{
-		std::unique_lock<std::mutex>(_mutex);
+		std::lock_guard<std::mutex> lock(_mutex);
 		return (*this)[key];
 	}
 

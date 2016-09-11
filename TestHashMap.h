@@ -14,7 +14,6 @@ namespace testHM
 
 	typedef void (*SetFunction)(unsigned int);
 
-	std::vector<std::thread*> _threads;
 	std::atomic_bool _startFlag;
 	
 #pragma region HASH_TABLES
@@ -94,7 +93,70 @@ namespace testHM
 #pragma endregion
 
 #pragma region GET_FUNCTIONS
+	// GET
+	void stdMap_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
 
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = stdMap.Get(i);
+	}
+
+	void tbbHashMap_GetThread(unsigned int elementsToWrite)
+	{
+		tbb::concurrent_hash_map<std::uint32_t, std::uint32_t>::accessor result;
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			tbbHashMap.find(result, i);
+	}
+
+	void lockFreeTable1_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = lockFreeTable1.Get(i);
+	}
+
+	void lockFreeTable10_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = lockFreeTable10.Get(i);
+	}
+
+	void lockFreeTable100_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = lockFreeTable100.Get(i);
+	}
+
+	void lockFreeTable1000_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = lockFreeTable1000.Get(i);
+	}
+
+	void lockFreeTable10000_GetThread(unsigned int elementsToWrite)
+	{
+		while (!_startFlag)
+			std::this_thread::yield();
+
+		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
+			auto value = lockFreeTable10000.Get(i);
+	}
 #pragma endregion
 
 #pragma region TEST_FUNCTIONS
@@ -103,156 +165,84 @@ namespace testHM
 	double TestThreads(SetFunction function, unsigned int threads, unsigned int elements)
 	{
 		using namespace std::chrono;
+		std::vector<std::thread*> threadsVec;
 		time_point<high_resolution_clock> start;
 		time_point<high_resolution_clock> stop;
 
 		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(function, elements);
+			threadsVec.push_back(new std::thread(function, elements));
 
 		start = high_resolution_clock::now();
 		_startFlag = true;
 
-		for (auto t : _threads)
+		for (auto t : threadsVec)
 			t->join();
-		for (auto t : _threads)
-			delete t;
-
 		stop = high_resolution_clock::now();
+
+		for (auto t : threadsVec)
+			delete t;
 		_startFlag = false;
 
 		return duration<double>(stop - start).count();
 	}
 
+
 	// TEST
 	void testInsert(unsigned int threads, unsigned int elements)
 	{
-		using namespace std::chrono;
-		time_point<high_resolution_clock> start;
-		time_point<high_resolution_clock> stop;
-
-
-
-		for (auto i = 0u; i < threads; i++)
-			_threads.push_back(nullptr);
-
 		// TBB
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(tbbHashMap_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto tbbTime = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto tbbTime = TestThreads(tbbHashMap_SetThread, threads, elements);
 
 		// UNORDERED
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(stdMap_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto stdTime = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto stdTime = TestThreads(stdMap_SetThread, threads, elements);
 
 		// LOCKFREE1
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(lockFreeTable1_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto freetime1 = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto freetime1 = TestThreads(lockFreeTable1_SetThread, threads, elements);
 
 		// LOCKFREE10
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(lockFreeTable10_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto freetime10 = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto freetime10 = TestThreads(lockFreeTable10_SetThread, threads, elements);
 
 		// LOCKFREE100
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(lockFreeTable100_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto freetime100 = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto freetime100 = TestThreads(lockFreeTable100_SetThread, threads, elements);
 
 		// LOCKFREE1000
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(lockFreeTable1000_SetThread, elements);
-
-		start = high_resolution_clock::now();
-		_startFlag = true;
-
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
-
-		stop = high_resolution_clock::now();
-		auto freetime1000 = duration<double>(stop - start).count();
-
-		_startFlag = false;
+		auto freetime1000 = TestThreads(lockFreeTable1000_SetThread, threads, elements);
 
 		// LOCKFREE10000
-		for (auto i = 0u; i < threads; i++)
-			_threads[i] = new std::thread(lockFreeTable10000_SetThread, elements);
+		auto freetime10000 = TestThreads(lockFreeTable10000_SetThread, threads, elements);
 
-		start = high_resolution_clock::now();
-		_startFlag = true;
+		std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
+		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
+		std::cout << "Time LOCKFREE1:\t\t" << freetime1 << std::endl;
+		std::cout << "Time LOCKFREE10:\t" << freetime10 << std::endl;
+		std::cout << "Time LOCKFREE100:\t" << freetime100 << std::endl;
+		std::cout << "Time LOCKFREE1000:\t" << freetime1000 << std::endl;
+		std::cout << "Time LOCKFREE10000:\t" << freetime10000 << std::endl;
+		cout << endl;
+	}
 
-		for (auto t : _threads)
-			t->join();
-		for (auto t : _threads)
-			delete t;
+	void testGet(unsigned int threads, unsigned int elements)
+	{
+		// TBB
+		auto tbbTime = TestThreads(tbbHashMap_GetThread, threads, elements);
 
-		stop = high_resolution_clock::now();
-		auto freetime10000 = duration<double>(stop - start).count();
+		// UNORDERED
+		auto stdTime = TestThreads(stdMap_GetThread, threads, elements);
 
-		_startFlag = false;
+		// LOCKFREE1
+		auto freetime1 = TestThreads(lockFreeTable1_GetThread, threads, elements);
+
+		// LOCKFREE10
+		auto freetime10 = TestThreads(lockFreeTable10_GetThread, threads, elements);
+
+		// LOCKFREE100
+		auto freetime100 = TestThreads(lockFreeTable100_GetThread, threads, elements);
+
+		// LOCKFREE1000
+		auto freetime1000 = TestThreads(lockFreeTable1000_GetThread, threads, elements);
+
+		// LOCKFREE10000
+		auto freetime10000 = TestThreads(lockFreeTable10000_GetThread, threads, elements);
 
 		std::cout << "Time TBB:\t\t" << tbbTime << " [" << tbbHashMap.size() << "]" << std::endl;
 		std::cout << "Time STD:\t\t" << stdTime << " [" << stdMap.Size() << "]" << std::endl;
