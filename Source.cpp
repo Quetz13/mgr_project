@@ -4,6 +4,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <type_traits>
 #include "MemoryOrder.h"
 
 //#include "HashTable.h"
@@ -119,16 +120,55 @@
 //}
 
 
+//struct A
+//{
+//	int x;
+//};
+//
+//struct B
+//{
+//	B(const B&) {}
+//};
+//
+//struct C
+//{
+//	virtual void foo();
+//};
+//
+//struct D : public A
+//{
+//	int y;
+//	bool z;
+//	double v;
+//	char c;
+//};
+//
+//struct E
+//{
+//	A a;
+//	D d;
+//};
+
 int main()
 {
 
 	
-	testHM::testInsert(1, 10000);
-	testHM::testGet(1, 10000);
-	testHM::testAll(1, 1, 1);
+	testHM::testInsert(100, 1000000);
+	testHM::testGet(100, 1000000);
+	//testHM::testAll(1, 1, 1);
 
-
-
+	//std::cout << std::boolalpha;
+	//std::cout << std::is_trivially_copyable<A>::value << endl;
+	//std::cout << std::is_trivially_copyable<B>::value << endl;
+	//std::cout << std::is_trivially_copyable<C>::value << endl;
+	//std::cout << std::is_trivially_copyable<D>::value << endl;
+	//std::cout << std::is_trivially_copyable<E>::value << endl;
+	//cout << endl;
+	//std::cout << std::is_trivial<A>::value << endl;
+	//std::cout << std::is_trivial<B>::value << endl;
+	//std::cout << std::is_trivial<C>::value << endl;
+	//std::cout << std::is_trivial<D>::value << endl;
+	//std::cout << std::is_trivial<E>::value << endl;
 
 
 
