@@ -1,0 +1,70 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="FIFO.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Counters.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LockfreeTuple.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ScottMichael.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="NewFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="BlockingFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="HerbSutterFIFO.h">
+      <Filter>FIFO</Filter>
+    </ClInclude>
+    <ClInclude Include="Test.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="newnewFIFO.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="LockfreeHashMap.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryOrder.h" />
+    <ClInclude Include="UnorderedMap.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="HashMapTests.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="LockFreeArray.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+    <ClInclude Include="TestHashMap.h">
+      <Filter>HashMap</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{c96952f3-cc1e-42c3-b122-e96f5e31d4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{1d5d38c5-3445-4674-b01d-b7c20303eae5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FIFO">
+      <UniqueIdentifier>{dd27ed54-d29b-48fb-9646-5219390315f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HashMap">
+      <UniqueIdentifier>{8ca70d30-9fa7-453d-9018-39633396fbfc}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
