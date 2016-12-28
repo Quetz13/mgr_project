@@ -84,8 +84,8 @@ namespace testHM
 			std::this_thread::yield();
 
 		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
-			//lockFreeTable1.Set(i, new std::uint32_t(i));
-			lockFreeTable1.Set(i, i);
+			lockFreeTable1.Set(i, new std::uint32_t(i));
+			//lockFreeTable1.Set(i, i);
 	}
 #ifdef JUNCTION
 	void junctionLinear_SetThread(unsigned int elementsToWrite)
@@ -130,8 +130,8 @@ namespace testHM
 			std::this_thread::yield();
 
 		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
-			//lockFreeTable10.Set(i, new std::uint32_t(i));
-			lockFreeTable10.Set(i, i);
+			lockFreeTable10.Set(i, new std::uint32_t(i));
+			//lockFreeTable10.Set(i, i);
 	}
 
 	void lockFreeTable100_SetThread(unsigned int elementsToWrite)
@@ -140,8 +140,8 @@ namespace testHM
 			std::this_thread::yield();
 
 		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
-			//lockFreeTable100.Set(i, new std::uint32_t(i));
-			lockFreeTable100.Set(i, i);
+			lockFreeTable100.Set(i, new std::uint32_t(i));
+			//lockFreeTable100.Set(i, i);
 	}
 
 	void lockFreeTable1000_SetThread(unsigned int elementsToWrite)
@@ -150,8 +150,8 @@ namespace testHM
 			std::this_thread::yield();
 
 		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
-			//lockFreeTable1000.Set(i, new std::uint32_t(i));
-			lockFreeTable1000.Set(i, i);
+			lockFreeTable1000.Set(i, new std::uint32_t(i));
+			//lockFreeTable1000.Set(i, i);
 	}
 
 	void lockFreeTable10000_SetThread(unsigned int elementsToWrite)
@@ -160,8 +160,8 @@ namespace testHM
 			std::this_thread::yield();
 
 		for (std::uint32_t i = 0u; i < elementsToWrite; i++)
-			//lockFreeTable10000.Set(i, new std::uint32_t(i));
-			lockFreeTable10000.Set(i, i);
+			lockFreeTable10000.Set(i, new std::uint32_t(i));
+			//lockFreeTable10000.Set(i, i);
 	}
 #pragma endregion
 

@@ -156,9 +156,9 @@ int main()
 	//testHM::testInsert(100, 1000);
 	//testHM::testGet(100, 1000);
 	//testHM::printSizes();
-	testHM::testAll(10, 10, 1000);
-	testHM::testAll(10, 10, 1000);
-	testHM::testAll(10, 10, 1000);
+	testHM::testAll(100, 100, 10000);
+	testHM::testAll(100, 100, 10000);
+	testHM::testAll(100, 100, 10000);
 	//testHM::printSizes();
 	//std::cout << std::boolalpha;
 	//std::cout << std::is_trivially_copyable<A>::value << endl;

@@ -114,8 +114,8 @@ class LockFreeHashTable
 private:
 	struct Bucket
 	{
-		//std::atomic<DataType*> value;
-		std::atomic<DataType> value;
+		std::atomic<DataType*> value;
+		//std::atomic<DataType> value;
 	};
 
 	BucketsList<Bucket, BucketSize> _buckets;
@@ -131,8 +131,8 @@ private:
 	}
 
 public:
-	//void Set(KeyType key, DataType* value)
-	void Set(KeyType key, DataType value)
+	void Set(KeyType key, DataType* value)
+	//void Set(KeyType key, DataType value)
 	{
 		auto hashKey = HashFunction(key);
 		auto bucketIndex = getBucketIndex(hashKey);
@@ -142,25 +142,25 @@ public:
 		{
 			//auto newBucket = new Bucket[BucketSize];
 			//if (!_buckets.TryToAdd(newBucket, bucketIndex))
-				//delete newBucket;
+			//	delete newBucket;
 			_buckets.TryToAdd(bucketIndex);
 		}
 		Bucket* bucket = _buckets.Get(bucketIndex);
 
-		//DataType* prev = bucket[getKeyLocalIndex(hashKey)].value.exchange(value);
-		//delete prev;
+		DataType* prev = bucket[getKeyLocalIndex(hashKey)].value.exchange(value);
+		delete prev;
 	}
 
-	//const DataType* Get(KeyType key) const
-	DataType Get(KeyType key) const
+	const DataType* Get(KeyType key) const
+	//DataType Get(KeyType key) const
 	{
 		std::uint32_t bucketIndex = getBucketIndex(key);
 		auto bucket = _buckets.Get(bucketIndex);
 		if (bucket != nullptr)
 			return _buckets.Get(bucketIndex)[key - bucketIndex*BucketSize].value.load();
 		else
-			//return nullptr;
-			return NULL;
+			return nullptr;
+			//return NULL;
 	}
 
 };
